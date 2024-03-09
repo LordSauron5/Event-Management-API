@@ -19,6 +19,8 @@ class EventController extends Controller
     public function __construct(array $relations = ['user', 'attendees', 'attendees.user']) {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
         $this->authorizeResource(Event::class, 'event');
+        $this->middleware('throttle:api')
+            ->only(['store','update', 'destroy']);
         $this->relations = $relations;
     }
 
