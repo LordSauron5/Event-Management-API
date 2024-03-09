@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -12,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        return Event::all();
     }
 
     /**
@@ -20,30 +22,54 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // create event (if valid request parameters)
+        $event = Event::create([
+            ...$request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after:start_time',
+            ]),
+            'user_id' => 1
+        ]);
+
+        return $event;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Event $event)
     {
-        //
+        return Event::find($event);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        // update event (if valid request parameters)
+        $event->update(
+            $request->validate([
+                'name' => 'sometimes|string|max:255',
+                'description' => 'nullable|string',
+                'start_time' => 'sometimes|date',
+                'end_time' => 'sometimes|date|after:start_time',
+            ]),
+        );
+
+        return $event;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Event $event)
     {
-        //
+        $event->delete();
+
+        // return response()->json(['message'=>'event deleted successfully']);
+        return response(status:204);
     }
 }
