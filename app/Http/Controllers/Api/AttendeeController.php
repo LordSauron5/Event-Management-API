@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AttendeeResource;
 use App\Http\Traits\CanLoadRelationships;
+use App\Policies\AttendeePolicy;
 
 class AttendeeController extends Controller
 {
@@ -18,6 +19,7 @@ class AttendeeController extends Controller
     public function __construct(array $relations = ['user']) {
         $this->relations = $relations;
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+        $this->authorizeResource(AttendeePolicy::class, 'attendee');
     }
 
     /**
@@ -57,7 +59,6 @@ class AttendeeController extends Controller
      */
     public function destroy(string $event, Attendee $attendee)
     {
-        $this->authorize('delete-attendee', [$event, $attendee]);
         $attendee->delete();
 
         return response(status: 204);
