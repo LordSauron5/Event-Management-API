@@ -5,21 +5,22 @@ namespace App\Http\Traits;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait CanLoadRelationships
 {
     /**
      * Load specified relationships into the given query or model.
      *
-     * @param Model|QueryBuilder|EloquentBuilder $for The query or model to load relationships into.
+     * @param Model|QueryBuilder|EloquentBuilder|HasMany $for The query or model to load relationships into.
      * @param array|null $relations The array of relationships to be loaded.
      *
-     * @return Model|QueryBuilder|EloquentBuilder The modified query or model with loaded relationships.
+     * @return Model|QueryBuilder|EloquentBuilder|HasMany The modified query or model with loaded relationships.
      */
     public function loadRelationships(
-        Model|QueryBuilder|EloquentBuilder $for,
+        Model|QueryBuilder|EloquentBuilder|HasMany $for,
         ?array $relations = null
-        ): Model|QueryBuilder|EloquentBuilder {
+        ): Model|QueryBuilder|EloquentBuilder|HasMany {
 
             $relations = $relations ?? $this->relations ?? [];
 
